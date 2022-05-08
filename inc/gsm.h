@@ -9,6 +9,10 @@
 #ifndef	GSM_H
 #define	GSM_H
 
+#ifdef __cplusplus 
+extern "C" {
+#endif
+
 #ifdef __cplusplus
 #	define	NeedFunctionPrototypes	1
 #endif
@@ -67,5 +71,9 @@ extern int  gsm_explode GSM_P((gsm, gsm_byte   *, gsm_signal *));
 extern void gsm_implode GSM_P((gsm, gsm_signal *, gsm_byte   *));
 
 #undef	GSM_P
+
+#ifdef __cplusplus 
+}
+#endif
 
 #endif	/* GSM_H */
