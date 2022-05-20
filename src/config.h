@@ -1,1 +1,2 @@
-../inc/config.h
+#pragma once
+#include "../inc/config.h"

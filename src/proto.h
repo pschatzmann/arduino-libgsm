@@ -1,1 +1,2 @@
-../inc/proto.h
+#pragma once
+#include "../inc/proto.h"

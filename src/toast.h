@@ -1,1 +1,2 @@
-../inc/toast.h
+#pragma once
+#include "../inc/toast.h"

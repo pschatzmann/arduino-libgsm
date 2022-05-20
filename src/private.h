@@ -1,1 +1,2 @@
-../inc/private.h
+#pragma once
+#include "../inc/private.h"

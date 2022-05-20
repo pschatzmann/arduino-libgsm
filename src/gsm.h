@@ -1,1 +1,2 @@
-../inc/gsm.h
+#pragma once
+#include "../inc/gsm.h"

@@ -1,1 +1,2 @@
-../inc/unproto.h
+#pragma once
+#include "../inc/unproto.h"
