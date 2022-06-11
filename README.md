@@ -35,6 +35,12 @@ git clone pschatzmann/arduino-libgsm.git
 
 The use of git is recommended because you can easily update to the latest version just by executing the ```git pull``` command in the project folder.
 
+## Documentation
+
+I recommend to use this library together with my [Arduino Audio Tools](https://github.com/pschatzmann/arduino-audio-tools). 
+This is just one of many __codecs__ that I have collected so far: Further details can be found in the [Encoding and Decoding Wiki](https://github.com/pschatzmann/arduino-audio-tools/wiki/Encoding-and-Decoding-of-Audio) of the Audio Tools.
+
+
 ## Copyright
 
 Jutta Degener (then jutta@cs.tu-berlin.de, nowadays jutta@pobox.com)
