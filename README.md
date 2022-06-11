@@ -24,7 +24,7 @@ a library API.  Compression and decompression run faster than realtime
 on most SPARCstations.  The implementation has been verified against the
 ETSI standard test patterns.
 
-## Arduino Library
+## Installation Arduino 
 
 You can download the library as zip and call include Library -> zip library. Or you can __git clone__ this project into the Arduino libraries folder e.g. with
 
