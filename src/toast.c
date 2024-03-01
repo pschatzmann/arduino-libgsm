@@ -749,6 +749,8 @@ static void set_format P1((f), struct fmtdesc * f)
 	f_format = f;
 }
 
+#ifndef ARDUINO
+
 int main P2((ac, av), int ac, char **av)
 {
 	int  		opt;
@@ -795,3 +797,5 @@ int main P2((ac, av), int ac, char **av)
 
 	exit(0);
 }
+
+#endif
