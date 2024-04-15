@@ -11,7 +11,7 @@
 /*  toast_alaw.c -- manipulate A-law encoded sound.
  */
 
-extern FILE	* in, * out;
+extern FILE	* f_in, * f_out;
 
 #define	A2S(x)	(a2s[  (unsigned char )(x)       ])
 #define	S2A(x)	(s2a[ ((unsigned short)(x)) >> 4 ])
@@ -318,8 +318,8 @@ int alaw_input P1((buf), gsm_signal * buf)
 {
 	int  i, c;
 
-	for (i = 0; i < 160 && (c = fgetc(in)) != EOF; i++) buf[i] = A2S( c );
-	if (c == EOF && ferror(in)) return -1;
+	for (i = 0; i < 160 && (c = fgetc(f_in)) != EOF; i++) buf[i] = A2S( c );
+	if (c == EOF && ferror(f_in)) return -1;
 	return i;
 }
 
@@ -328,7 +328,7 @@ int alaw_output P1((buf), gsm_signal * buf)
 	int  i;
 
 	for (i = 0; i < 160; i++, buf++)
-		if (fputc( S2A( *buf ), out) == EOF) return -1;
+		if (fputc( S2A( *buf ), f_out) == EOF) return -1;
 	return 0;
 }
 

@@ -8,6 +8,8 @@
 
 #include	"toast.h"
 
+#pragma GCC diagnostic ignored "-Wdiscarded-qualifiers"
+
 /*  toast -- lossy sound compression using the gsm library.
  */
 
@@ -23,7 +25,7 @@ int	f_ltp_cut  = 0;		/* LTP cut-off margin	      	 (-C) */
 
 struct stat instat;		/* stat (inname) 		 */
 
-FILE	*in, 	 *out;
+FILE	*f_in, 	 *f_out;
 char	*inname, *outname;
 
 /*
@@ -320,7 +322,7 @@ static void update_mode P0()
 	if (!instat.st_nlink) return;		/* couldn't stat in */
 
 #ifdef HAS_FCHMOD
-	if (fchmod(fileno(out), instat.st_mode & 07777)) {
+	if (fchmod(fileno(f_out), instat.st_mode & 07777)) {
 		perror(outname);
 		fprintf(stderr, "%s: could not change file mode of \"%s\"\n",
 			progname, outname);
@@ -340,7 +342,7 @@ static void update_own P0()
 {
 	if (!instat.st_nlink) return; /* couldn't stat in */
 #ifdef HAS_FCHOWN
-	(void)fchown(fileno(out), instat.st_uid, instat.st_gid);
+	(void)fchown(fileno(f_out), instat.st_uid, instat.st_gid);
 #else 
 #ifdef HAS_CHOWN
 	(void)chown(outname, instat.st_uid, instat.st_gid);
@@ -463,7 +465,7 @@ static int open_input P2((name, st), char * name, struct stat * st)
 	st->st_nlink = 0;	/* indicates `undefined' value */
 	if (!name) {
 		inname = (char *)NULL;
-		in     = stdin;
+		f_in     = stdin;
 #ifdef	HAS__FSETMODE
 		_fsetmode(in, "b");
 #endif
@@ -479,13 +481,13 @@ static int open_input P2((name, st), char * name, struct stat * st)
 			}
 			inname = strcpy(emalloc(strlen(name)+1), name);
 		}
-		if (!(in = fopen(inname, READ))) {
+		if (!(f_in = fopen(inname, READ))) {
 			perror(inname);	/* not guaranteed to be valid here */
 			fprintf(stderr, "%s: cannot open \"%s\" for reading\n",
 				progname, inname);
 			return 0;
 		}
-		if (!okay_as_input(inname, in, st)) return 0;
+		if (!okay_as_input(inname, f_in, st)) return 0;
 		if (!f) f = grok_format(inname);
 	}
 	prepare_io( f ? f : & DEFAULT_FORMAT );
@@ -495,7 +497,7 @@ static int open_input P2((name, st), char * name, struct stat * st)
 static int open_output P1((name), char *name)
 {
 	if (!name || f_cat) {
-		out     = stdout;
+		f_out     = stdout;
 		outname = (char *)NULL;
 #ifdef	HAS__FSETMODE
 		_fsetmode(out, "b"); 
@@ -508,12 +510,12 @@ static int open_output P1((name), char *name)
 		o = (*(f_decode ? plainname : codename))(name);
 		if (!length_okay(o)) return 0;
 		if ((outfd = open(o, O_WRITE_EXCL, 0666)) >= 0)
-			out = fdopen(outfd, WRITE);
-		else if (errno != EEXIST) out = (FILE *)NULL;
-		else if (ok_to_replace(o)) out = fopen(o, WRITE);
+			f_out = fdopen(outfd, WRITE);
+		else if (errno != EEXIST) f_out = (FILE *)NULL;
+		else if (ok_to_replace(o)) f_out = fopen(o, WRITE);
 		else return 0;
 
-		if (!out) {
+		if (!f_out) {
 			perror(o);
 			fprintf(stderr,
 				"%s: can't open \"%s\" for writing\n",
@@ -547,7 +549,7 @@ static int process_encode P0()
 		if (cc < sizeof(s) / sizeof(*s))
 			memset((char *)(s+cc), 0, sizeof(s)-(cc * sizeof(*s)));
 		gsm_encode(r, s, d);
-		if (fwrite((char *)d, sizeof(d), 1, out) != 1) {
+		if (fwrite((char *)d, sizeof(d), 1, f_out) != 1) {
 			perror(outname ? outname : "stdout");
 			fprintf(stderr, "%s: error writing to %s\n",
 				progname, outname ? outname : "stdout");
@@ -582,7 +584,7 @@ static int process_decode P0()
 	(void)gsm_option(r, GSM_OPT_FAST,    &f_fast);
 	(void)gsm_option(r, GSM_OPT_VERBOSE, &f_verbose);
 
-	while ((cc = fread(s, 1, sizeof(s), in)) > 0) {
+	while ((cc = fread(s, 1, sizeof(s), f_in)) > 0) {
 
 		if (cc != sizeof(s)) {
 			if (cc >= 0) fprintf(stderr,
@@ -625,8 +627,8 @@ static int process_decode P0()
 
 static int process P1((name), char * name)
 {
-	out     = (FILE *)0;
-	in      = (FILE *)0;
+	f_out     = (FILE *)0;
+	f_in      = (FILE *)0;
 
 	outname = (char *)0;
 	inname  = (char *)0;
@@ -646,20 +648,20 @@ static int process P1((name), char * name)
 	if ((*(f_decode ? process_decode : process_encode))())
 		goto err;
 
-	if (fflush(out) < 0 || ferror(out)) {
+	if (fflush(f_out) < 0 || ferror(f_out)) {
 		perror(outname ? outname : "stdout");
 		fprintf(stderr, "%s: error writing \"%s\"\n", progname,
 				outname ? outname:"stdout");
 		goto err;
 	}
 
-	if (out != stdout) {
+	if (f_out != stdout) {
 
 		update_times();
 		update_mode ();
 		update_own  ();
 
-		if (fclose(out) < 0) {
+		if (fclose(f_out) < 0) {
 			perror(outname);
 			fprintf(stderr, "%s: error writing \"%s\"\n",
 				progname, outname);
@@ -668,9 +670,9 @@ static int process P1((name), char * name)
 		if (outname != name) free(outname);
 		outname = (char *)0;
 	}
-	out = (FILE *)0;
-	if (in  != stdin) {
-		(void)fclose(in), in = (FILE *)0;
+	f_out = (FILE *)0;
+	if (f_in  != stdin) {
+		(void)fclose(f_in), f_in = (FILE *)0;
 		if (!f_cat && !f_precious) {
 			if (unlink(inname) < 0) {
 				perror(inname);
@@ -689,15 +691,15 @@ static int process P1((name), char * name)
 	 *  Error handling and cleanup.
 	 */
 err:
-	if (out && out != stdout) {
-		(void)fclose(out), out = (FILE *)0;
+	if (f_out && f_out != stdout) {
+		(void)fclose(f_out), f_out = (FILE *)0;
 		if (unlink(outname) < 0 && errno != ENOENT && errno != EINTR) {
 			perror(outname);
 			fprintf(stderr, "%s: could not unlink \"%s\"\n",
 				progname, outname);
 		}
 	}
-	if (in && in != stdin) (void)fclose(in), in = (FILE *)0;
+	if (f_in && f_in != stdin) (void)fclose(f_in), f_in = (FILE *)0;
 
 	if (inname  && inname  != name) free(inname);
 	if (outname && outname != name) free(outname);

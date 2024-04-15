@@ -11,7 +11,7 @@
 /* toast_ulaw -- functions to manipulate u-law encoded sound.
  */
 
-extern FILE	*in, *out;
+extern FILE	*f_in, *f_out;
 
 #define	U2S(x)	(u2s[  (unsigned  char)(x)       ])
 #define	S2U(x)	(s2u[ ((unsigned short)(x)) >> 3 ])
@@ -605,8 +605,8 @@ int ulaw_input P1((buf), gsm_signal * buf)
 {
 	int i, c;
 
-	for (i = 0; i < 160 && (c = fgetc(in)) != EOF; i++) buf[i] = U2S(c);
-	if (c == EOF && ferror(in)) return -1;
+	for (i = 0; i < 160 && (c = fgetc(f_in)) != EOF; i++) buf[i] = U2S(c);
+	if (c == EOF && ferror(f_in)) return -1;
 	return i;
 }
 
@@ -615,7 +615,7 @@ int ulaw_output P1((buf), gsm_signal * buf)
 	int i;
 
 	for(i = 0; i < 160; i++, buf++)
-		if (fputc( (char)S2U( (unsigned short)*buf ), out) == EOF)
+		if (fputc( (char)S2U( (unsigned short)*buf ), f_out) == EOF)
 			return -1;
 	return 0;
 }

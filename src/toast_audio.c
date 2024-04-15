@@ -14,7 +14,7 @@
  *  and in no way portable, durable or aesthetically pleasing.
  */
 
-extern FILE	* in, 	  * out;
+extern FILE	* f_in, 	  * f_out;
 extern char	* inname;
 extern char	* progname;
 
@@ -58,13 +58,13 @@ int audio_init_input P0()
 {
 	unsigned long	len, enc;	/* unsigned 32 bits	*/
 
-	if (  fgetc(in) != '.' 
-	   || fgetc(in) != 's'
-	   || fgetc(in) != 'n'
-	   || fgetc(in) != 'd'
-	   || get_u32( in, &len )
-	   || get_u32( in, &enc )	/* skip this */
-	   || get_u32( in, &enc )) {
+	if (  fgetc(f_in) != '.' 
+	   || fgetc(f_in) != 's'
+	   || fgetc(f_in) != 'n'
+	   || fgetc(f_in) != 'd'
+	   || get_u32( f_in, &len )
+	   || get_u32( f_in, &enc )	/* skip this */
+	   || get_u32( f_in, &enc )) {
 		fprintf(stderr, 
 	"%s: bad (missing?) header in Sun audio file \"%s\";\n\
 	Try one of -u, -a, -l instead (%s -h for help).\n",
@@ -85,7 +85,7 @@ int audio_init_input P0()
 	}
 
 	while (len > 4*4)
-		if (getc(in) == EOF) {
+		if (getc(f_in) == EOF) {
 			fprintf(stderr, 
 			"%s: EOF in header of Sun audio file \"%s\";\n\
 			Try one of -u, -a, -l instead (%s -h for help).\n",
@@ -99,14 +99,14 @@ int audio_init_input P0()
 
 int audio_init_output P0()
 {
-	if (  fputs(".snd", out) == EOF
-	   || put_u32(out, 32)
-	   || put_u32(out, ~(unsigned long)0)
-	   || put_u32(out, 1)
-	   || put_u32(out, 8000)
-	   || put_u32(out, 1)
-	   || put_u32(out, 0)
-	   || put_u32(out, 0)) return -1;
+	if (  fputs(".snd", f_out) == EOF
+	   || put_u32(f_out, 32)
+	   || put_u32(f_out, ~(unsigned long)0)
+	   || put_u32(f_out, 1)
+	   || put_u32(f_out, 8000)
+	   || put_u32(f_out, 1)
+	   || put_u32(f_out, 0)
+	   || put_u32(f_out, 0)) return -1;
 
 	return 0;
 }
