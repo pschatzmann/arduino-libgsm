@@ -1,5 +1,20 @@
 cmake_minimum_required(VERSION 3.16)
 
+if (DEFINED ESP_PLATFORM)
+  # idf component
+  # toast* files are the standalone "toast" CLI tool (has its own main()) - excluded from the library
+  file(GLOB GSM_SRCS "${CMAKE_CURRENT_SOURCE_DIR}/src/*.c")
+  list(FILTER GSM_SRCS EXCLUDE REGEX "/toast[^/]*\\.c$")
+
+  idf_component_register(
+      SRCS ${GSM_SRCS}
+      INCLUDE_DIRS src inc
+  )
+
+  target_compile_options(${COMPONENT_LIB} PUBLIC -Wno-error)
+
+else()
+
 # set the project name
 project(arduino_libgsm)
 
@@ -17,3 +32,5 @@ target_compile_options(arduino_libgsm PRIVATE -Wno-string-plus-int -Wdouble-prom
 
 # define location for header files
 target_include_directories(arduino_libgsm PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/src )
+
+endif()

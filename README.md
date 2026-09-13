@@ -1,6 +1,9 @@
 
 # GSM 06.10 13 kbit/s RPE/LTP speech compression 
 
+[![Arduino Library](https://img.shields.io/badge/Arduino-Library-blue.svg)](https://www.arduino.cc/reference/en/libraries/)
+[![IDF Component](https://img.shields.io/badge/IDF-Component-blue.svg)](https://github.com/pschatzmann/arduino-libgsm)
+
 The Communications and Operating Systems Research Group (KBS) at the
 Technische Universitaet Berlin is currently working on a set of
 UNIX-based tools for computer-mediated telecooperation that will be
