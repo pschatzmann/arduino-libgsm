@@ -3,6 +3,7 @@
 
 [![Arduino Library](https://img.shields.io/badge/Arduino-Library-blue.svg)](https://www.arduino.cc/reference/en/libraries/)
 [![IDF Component](https://img.shields.io/badge/IDF-Component-blue.svg)](https://github.com/pschatzmann/arduino-libgsm)
+[![CMake](https://img.shields.io/badge/CMake-Supported-blue.svg)](https://cmake.org/)
 
 The Communications and Operating Systems Research Group (KBS) at the
 Technische Universitaet Berlin is currently working on a set of
