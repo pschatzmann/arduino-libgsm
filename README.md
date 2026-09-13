@@ -2,7 +2,7 @@
 # GSM 06.10 13 kbit/s RPE/LTP speech compression 
 
 [![Arduino Library](https://img.shields.io/badge/Arduino-Library-blue.svg)](https://www.arduino.cc/reference/en/libraries/)
-[![IDF Component](https://img.shields.io/badge/IDF-Component-blue.svg)](https://github.com/pschatzmann/arduino-libgsm)
+[![IDF Component](https://img.shields.io/badge/IDF-Component-blue.svg)](https://github.com/pschatzmann/codec-gsm)
 [![CMake](https://img.shields.io/badge/CMake-Supported-blue.svg)](https://cmake.org/)
 
 The Communications and Operating Systems Research Group (KBS) at the
@@ -34,7 +34,7 @@ You can download the library as zip and call include Library -> zip library. Or 
 
 ```
 cd  ~/Documents/Arduino/libraries
-git clone pschatzmann/arduino-libgsm.git
+git clone pschatzmann/codec-gsm.git
 ```
 
 The use of git is recommended because you can easily update to the latest version just by executing the ```git pull``` command in the project folder.
